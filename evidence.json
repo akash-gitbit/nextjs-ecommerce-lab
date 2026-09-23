@@ -1,0 +1,101 @@
+{
+  "repository": {
+    "name": "vercel/commerce",
+    "commit": "3761e52e60df9c6a316e067dbfd7032e494d3634"
+  },
+  "evidence": [
+    {
+      "id": "E1",
+      "file": "components/cart/edit-item-quantity-button.tsx",
+      "symbol": "EditItemQuantityButton",
+      "line_start": 42,
+      "line_end": 46,
+      "claim": "The increment payload is calculated during render from the rendered item's quantity and then bound to the action.",
+      "snippet": "const payload = { merchandiseId: item.merchandise.id, quantity: type === \"plus\" ? item.quantity + 1 : item.quantity - 1 }; const updateItemQuantityAction = formAction.bind(null, payload);"
+    },
+    {
+      "id": "E2",
+      "file": "components/cart/edit-item-quantity-button.tsx",
+      "symbol": "EditItemQuantityButton",
+      "line_start": 49,
+      "line_end": 53,
+      "claim": "The submit handler performs the optimistic update before invoking the already-bound action.",
+      "snippet": "action={async () => { optimisticUpdate(payload.merchandiseId, type); updateItemQuantityAction(); }}"
+    },
+    {
+      "id": "E3",
+      "file": "components/cart/cart-context.tsx",
+      "symbol": "updateCartItem",
+      "line_start": 39,
+      "line_end": 46,
+      "claim": "The optimistic reducer computes the next quantity from the current optimistic item quantity.",
+      "snippet": "const newQuantity = updateType === \"plus\" ? item.quantity + 1 : item.quantity - 1;"
+    },
+    {
+      "id": "E4",
+      "file": "components/cart/cart-context.tsx",
+      "symbol": "updateCartItem",
+      "line_start": 55,
+      "line_end": 65,
+      "claim": "The optimistic update returns a new item containing the calculated quantity rather than mutating the previously created action payload.",
+      "snippet": "return { ...item, quantity: newQuantity, cost: { ...item.cost, totalAmount: { ...item.cost.totalAmount, amount: newTotalAmount } } };"
+    },
+    {
+      "id": "E5",
+      "file": "components/cart/actions.ts",
+      "symbol": "updateItemQuantity",
+      "line_start": 54,
+      "line_end": 61,
+      "claim": "The server action accepts quantity as a number in the submitted payload and extracts that value directly.",
+      "snippet": "payload: { merchandiseId: string; quantity: number } ... const { merchandiseId, quantity } = payload;"
+    },
+    {
+      "id": "E6",
+      "file": "components/cart/actions.ts",
+      "symbol": "updateItemQuantity",
+      "line_start": 70,
+      "line_end": 72,
+      "claim": "The server action uses the submitted merchandise ID to locate the existing cart line.",
+      "snippet": "const lineItem = cart.lines.find((line) => line.merchandise.id === merchandiseId);"
+    },
+    {
+      "id": "E7",
+      "file": "components/cart/actions.ts",
+      "symbol": "updateItemQuantity",
+      "line_start": 74,
+      "line_end": 84,
+      "claim": "For an existing line item, the submitted quantity is passed directly to updateCart.",
+      "snippet": "await updateCart([{ id: lineItem.id, merchandiseId, quantity }]);"
+    },
+    {
+      "id": "E8",
+      "file": "components/cart/actions.ts",
+      "symbol": "updateItemQuantity",
+      "line_start": 74,
+      "line_end": 88,
+      "claim": "The server action does not calculate a relative increment from lineItem.quantity; it uses the submitted absolute quantity for updateCart or addToCart.",
+      "snippet": "quantity is passed directly to updateCart, while a missing line uses addToCart with the submitted quantity."
+    },
+    {
+      "id": "E9",
+      "file": "components/cart/modal.tsx",
+      "symbol": "CartModal",
+      "line_start": 174,
+      "line_end": 188,
+      "claim": "The quantity editor receives the cart item being rendered and the optimistic cart update function.",
+      "snippet": "<EditItemQuantityButton item={item} type=\"plus\" optimisticUpdate={updateCartItem} />"
+    }
+  ],
+  "reasoning": {
+    "initial_rendered_quantity": 2,
+    "captured_increment_payload": 3,
+    "same_render_second_invocation": 3,
+    "optimistic_quantity_after_two_increments": 4,
+    "server_mutation_quantity_per_same_render_invocation": 3
+  },
+  "verification_scope": {
+    "type": "source-level",
+    "runtime_reproduction": false,
+    "note": "The conclusion is derived from the pinned repository source. No runtime reproduction result is claimed as empirical evidence."
+  }
+}

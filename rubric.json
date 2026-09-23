@@ -1,0 +1,83 @@
+{
+  "title": "Commerce Cart Quantity Investigation",
+  "total_points": 100,
+  "criteria": [
+    {
+      "id": "C1",
+      "points": 10,
+      "criterion": "Identifies where the increment payload is created.",
+      "full_credit": "States that EditItemQuantityButton creates the payload during render."
+    },
+    {
+      "id": "C2",
+      "points": 8,
+      "criterion": "Correctly identifies the quantity expression.",
+      "full_credit": "States that a plus action uses item.quantity + 1 and a minus action uses item.quantity - 1."
+    },
+    {
+      "id": "C3",
+      "points": 8,
+      "criterion": "Recognizes that the payload contains an absolute target quantity.",
+      "full_credit": "Explains that quantity: 3 means the submitted target quantity is 3, rather than an instruction to increment by one."
+    },
+        {
+      "id": "C4",
+      "points": 8,
+      "criterion": "Explains the binding of the render-created payload.",
+      "full_credit": "Explains that formAction.bind(null, payload) binds the payload used when the action is invoked."
+    },
+    {
+      "id": "C5",
+      "points": 8,
+      "criterion": "Correctly traces submit ordering.",
+      "full_credit": "States that optimisticUpdate is called before updateItemQuantityAction within the submit handler."
+    },
+    {
+      "id": "C6",
+      "points": 8,
+      "criterion": "Correctly explains the optimistic reducer.",
+      "full_credit": "States that updateCartItem calculates a new quantity from the current optimistic item's quantity."
+    },
+    {
+      "id": "C7",
+      "points": 8,
+      "criterion": "Separates optimistic state from the captured action payload.",
+      "full_credit": "Explains that changing optimistic state does not retroactively rewrite a payload that was already bound to an action."
+    },    {
+      "id": "C8",
+      "points": 10,
+      "criterion": "Correctly traces the server action's payload.",
+      "full_credit": "States that updateItemQuantity receives merchandiseId and quantity and extracts them directly from payload."
+    },
+    {
+      "id": "C9",
+      "points": 8,
+      "criterion": "Correctly traces the existing-line mutation.",
+      "full_credit": "States that for an existing line, the submitted quantity is passed directly to updateCart."
+    },
+    {
+      "id": "C10",
+      "points": 8,
+      "criterion": "Rejects the relative-increment server interpretation.",
+      "full_credit": "States that the server does not calculate a new quantity from lineItem.quantity + 1."
+    },
+    {
+      "id": "C11",
+      "points": 8,
+      "criterion": "Correctly answers the same-render scenario.",
+      "full_credit": "Given item.quantity = 2 and two invocations of the same render-created bound action, states that both submitted quantities are 3 while the optimistic quantity can reach 4."
+    },
+    {
+      "id": "C12",
+      "points": 8,
+      "criterion": "Correctly scopes the conclusion.",
+      "full_credit": "Distinguishes the exact same-render repeated-invocation scenario from arbitrary rapid physical clicks where a later render could create a new payload."
+    }  ],
+  "critical_errors": [
+    "Claims that the server calculates the next quantity from the latest lineItem.quantity.",
+    "Claims that optimistic state mutates an already-bound action payload.",
+    "Claims that two invocations of the same render-created action submit 3 and 4.",
+    "Treats quantity as a relative increment rather than an absolute target quantity.",
+    "Claims that the source-level conclusion was runtime-tested when runtime reproduction was not performed."
+  ]
+}
